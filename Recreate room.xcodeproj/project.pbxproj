@@ -257,6 +257,8 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QMRWCM23VG;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				OTHER_LDFLAGS = "-Wno-deprecated-declarations ";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Debug;
@@ -266,6 +268,8 @@
 			buildSettings = {
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = QMRWCM23VG;
+				GCC_WARN_ABOUT_DEPRECATED_FUNCTIONS = NO;
+				OTHER_LDFLAGS = "-Wno-deprecated-declarations ";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
 			name = Release;
