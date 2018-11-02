@@ -13,9 +13,24 @@
 
 double rotate_y=0;
 double rotate_x=0;
-static unsigned int table, bottomMachine, topMachine, cokeCan, keyboard, monitor;
+static unsigned int table, bottomMachine, topMachine, cokeCan, keyboard, monitor, monitorScreen, monitorBase;
+static unsigned int topMonitor;
 
 using namespace std;
+
+void displayText(){
+    string strScore = "SHALL WE PLAY A GAME? Love to. How about Global Thermonuclear War? WOULDN’T YOU PREFER A NICE GAME OF MARBLES?";
+    int n = strScore.length();
+    char text[n+1];
+    strcpy(text, strScore.c_str());
+    
+    glColor3f(255, 255, 255);
+    glRasterPos3f(-.8, .8, -1);
+    
+    for(int i = 0; text[i] != '\0'; i++){
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_10, text[i]);
+    }
+}
 
 void display() {
     
@@ -38,9 +53,16 @@ void display() {
     glCallList(topMachine);
     glCallList(keyboard);
     glCallList(monitor);
+    glCallList(monitorScreen);
+    glCallList(monitorBase);
+    glCallList(topMonitor);
+    displayText();
+
+
     
 
     //Move to position & draw coke can
+    glColor3f(0.95, 0.16, 0.16);
     glPushMatrix();
     glRotatef(270, 1, 0, 0);
     glTranslatef(-0.35, 0.45, 0.025);
@@ -49,6 +71,7 @@ void display() {
     glPopMatrix();
     
     //Draw table legs
+    glColor3f(0.6, 0.6, 0.6);
     glPushMatrix();
     glRotatef(90, 1, 0, 0);
     glTranslatef(0.45, 0.45, 0.025);
@@ -79,6 +102,7 @@ void display() {
     //END Table legs
     
     //Draw marbles
+    glColor3f(0.59, 0.95, 0.99);
     glPushMatrix();
     glTranslatef(-0.40, 0.035, -0.45);
     glutSolidSphere(0.01, 15, 15);
@@ -88,8 +112,7 @@ void display() {
     glutSolidSphere(0.01, 15, 15);
     glPopMatrix();
     
-    
-    
+ 
     glFlush();
     glutSwapBuffers();
     
@@ -119,11 +142,12 @@ void setup() {
     //END Coke can
     
     //Draw table
+//    glColor3f(1, 0, 0);
     table = glGenLists(1);
     glNewList(table, GL_COMPILE);
     glPushMatrix();
-    glColor3f(1, 0, 0);
-
+    glColor3f(0.4, 0.4, 0.4);
+    
     glBegin(GL_POLYGON); //front
     glVertex3f(  0.5, -0.025, -0.5 );
     glVertex3f(  0.5,  0.025, -0.5 );
@@ -175,9 +199,10 @@ void setup() {
     glNewList(bottomMachine, GL_COMPILE);
     glPushMatrix();
     glTranslatef(-.27,.075,.075);
-    glColor3f(0, 1, 0);
 
     glBegin(GL_POLYGON); //front
+    glColor3f(0.73, 0.73, 0.73);
+    
     glVertex3f(  0.2, -.05, -.4 );
     glVertex3f(  .2,  .05, -.4 );
     glVertex3f( -.2,  .05, -.4 );
@@ -185,6 +210,8 @@ void setup() {
     glEnd();
     
     glBegin(GL_POLYGON); //back
+    glColor3f(.19, .6, .8);
+
     glVertex3f(  .2, -.05, .4 );
     glVertex3f(  .2,  .05, .4 );
     glVertex3f( -.2,  .05, .4 );
@@ -228,9 +255,10 @@ void setup() {
     glNewList(topMachine, GL_COMPILE);
     glPushMatrix();
     glTranslatef(-.27,.17,.075);
-    glColor3f(1, 0, 0);
-
+    
     glBegin(GL_POLYGON); //front
+    glColor3f(0.5, 0.54, 0.53);
+    
     glVertex3f(  0.2, -.05, -.4 );
     glVertex3f(  .2,  .05, -.4 );
     glVertex3f( -.2,  .05, -.4 );
@@ -238,6 +266,8 @@ void setup() {
     glEnd();
     
     glBegin(GL_POLYGON); //back
+    glColor3f(0.9, 0.91, 0.84);
+
     glVertex3f(  .2, -.05, .4 );
     glVertex3f(  .2,  .05, .4 );
     glVertex3f( -.2,  .05, .4 );
@@ -281,7 +311,7 @@ void setup() {
     glNewList(keyboard, GL_COMPILE);
     glPushMatrix();
     glTranslatef(.2,.04, -.38);
-    glColor3f(0, 0, 10);
+    glColor3f(0.32, 0.32, 0.32);
     
     glBegin(GL_POLYGON); //front
     glVertex3f(  0.2, -.02, -.1 );
@@ -312,8 +342,7 @@ void setup() {
     glEnd();
     
     glBegin(GL_POLYGON); //top
-    glColor3f(1, 1, 1); //so you can see the tilt
-
+    glColor3f(0.16, 0.16, 0.16);
     glVertex3f(  .2,  .05,  .1 );
     glVertex3f(  .2,  .02, -.1 );
     glVertex3f( -.2,  .02, -.1 );
@@ -330,6 +359,221 @@ void setup() {
     glPopMatrix();
     glEndList();
     //END keyboard
+    
+    
+    monitor = glGenLists(1);
+    glNewList(monitor, GL_COMPILE);
+    glPushMatrix();
+    glTranslatef(.2, .3, -.05);
+    
+    glBegin(GL_POLYGON); //front
+    glColor3f(0.08, 0.08, 0.08);
+    
+    glVertex3f(  0.2, -.2, -.2 );
+    glVertex3f(  .2,  .2, -.2);
+    glVertex3f( -.2,  .2, -.2 );
+    glVertex3f( -.2, -.2, -.2 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //back
+    glColor3f(0.93, 0.9, 0.75);
+
+    glVertex3f(  .2, -.2, .2 );
+    glVertex3f(  .2,  .2, .2 );
+    glVertex3f( -.2,  .2, .2 );
+    glVertex3f( -.2, -.2, .2 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //right
+    glVertex3f( .2, -.2, -.2 );
+    glVertex3f( .2,  .2, -.2 );
+    glVertex3f( .2,  .2,  .2 );
+    glVertex3f( .2, -.2,  .2 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //left
+    glVertex3f( -.2, -.2,  .2 );
+    glVertex3f( -.2,  .2,  .2 );
+    glVertex3f( -.2,  .2, -.2 );
+    glVertex3f( -.2, -.2, -.2 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //top
+    glVertex3f(  .2,  .2,  .2 );
+    glVertex3f(  .2,  .2, -.2 );
+    glVertex3f( -.2,  .2, -.2 );
+    glVertex3f( -.2,  .2,  .2 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //bottom
+    glVertex3f(  .2, -.2, -.2 );
+    glVertex3f(  .2, -.2,  .2 );
+    glVertex3f( -.2, -.2,  .2 );
+    glVertex3f( -.2, -.2, -.2 );
+    glEnd();
+    
+    glPopMatrix();
+    glEndList();
+    //END monitor
+    
+    
+    monitorScreen = glGenLists(1);
+    glNewList(monitorScreen, GL_COMPILE);
+    glPushMatrix();
+    glTranslatef(.2, .3, -.26);
+    glColor3f(0.86, 0.85, 0.83);
+    
+    glBegin(GL_POLYGON); //front
+    glVertex3f(  .16, -.16, 0 );
+    glVertex3f(  .16,  .16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glVertex3f( -.16, -.16, 0 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //back
+    glVertex3f(  .16, -.16, 0 );
+    glVertex3f(  .16,  .16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glVertex3f( -.16, -.16, 0 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //right
+    glVertex3f( .16, -.16, 0 );
+    glVertex3f( .16,  .16, 0 );
+    glVertex3f( .16,  .16, 0 );
+    glVertex3f( .16, -.16, 0 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //left
+    glVertex3f( -.16, -.16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glVertex3f( -.16, -.16, 0 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //top
+    glVertex3f(  .16,  .16, 0 );
+    glVertex3f(  .16,  .16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glVertex3f( -.16,  .16, 0 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //bottom
+    glVertex3f(  .16, -.16, 0 );
+    glVertex3f(  .16, -.16, 0 );
+    glVertex3f( -.16, -.16, 0 );
+    glVertex3f( -.16, -.16, 0 );
+    glEnd();
+    
+    glPopMatrix();
+    glEndList();
+    //END monitorScreen
+    
+    
+    monitorBase = glGenLists(1);
+    glNewList(monitorBase, GL_COMPILE);
+    glPushMatrix();
+    glTranslatef(.2, 0.05, -.05);
+    glColor3f(0.93, 0.9, 0.75);
+
+    glBegin(GL_POLYGON); //front
+    glVertex3f(  .1, -.05, -.1 );
+    glVertex3f(  .1,  .05, -.1);
+    glVertex3f( -.1,  .05, -.1 );
+    glVertex3f( -.1, -.05, -.1 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //back
+    glVertex3f(  .1, -.05, .1 );
+    glVertex3f(  .1,  .05, .1 );
+    glVertex3f( -.1,  .05, .1 );
+    glVertex3f( -.1, -.05, .1 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //right
+    glVertex3f( .1, -.05, -.1 );
+    glVertex3f( .1,  .05, -.1 );
+    glVertex3f( .1,  .05,  .1 );
+    glVertex3f( .1, -.05,  .1 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //left
+    glVertex3f( -.1, -.05,  .1 );
+    glVertex3f( -.1,  .05,  .1 );
+    glVertex3f( -.1,  .05, -.1 );
+    glVertex3f( -.1, -.05, -.1 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //top
+    glVertex3f(  .1,  .05,  .1 );
+    glVertex3f(  .1,  .05, -.1 );
+    glVertex3f( -.1,  .05, -.1 );
+    glVertex3f( -.1,  .05,  .1 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //bottom
+    glVertex3f(  .1, -.05, -.1 );
+    glVertex3f(  .1, -.05,  .1 );
+    glVertex3f( -.1, -.05,  .1 );
+    glVertex3f( -.1, -.05, -.1 );
+    glEnd();
+    
+    glPopMatrix();
+    glEndList();
+    //END monitorBase
+    
+    
+    topMonitor = glGenLists(1);
+    glNewList(topMonitor, GL_COMPILE);
+    glPushMatrix();
+    glTranslatef(.2, 0.6, -.12);
+    glColor3f(0.68, 0.68, 0.68);
+    
+    glBegin(GL_POLYGON); //front
+    glVertex3f(  .1, -.1, -.075 );
+    glVertex3f(  .1,  .1, -.075 );
+    glVertex3f( -.1,  .1, -.075 );
+    glVertex3f( -.1, -.1, -.075 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //back
+    glVertex3f(  .1, -.1, .075 );
+    glVertex3f(  .1,  .1, .075 );
+    glVertex3f( -.1,  .1, .075 );
+    glVertex3f( -.1, -.1, .075 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //right
+    glVertex3f( .1, -.1, -.075 );
+    glVertex3f( .1,  .1, -.075 );
+    glVertex3f( .1,  .1,  .075 );
+    glVertex3f( .1, -.1,  .075 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //left
+    glVertex3f( -.1, -.1,  .075 );
+    glVertex3f( -.1,  .1,  .075 );
+    glVertex3f( -.1,  .1, -.075 );
+    glVertex3f( -.1, -.1, -.075 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //top
+    glVertex3f(  .1,  .1,  .075 );
+    glVertex3f(  .1,  .1, -.075 );
+    glVertex3f( -.1,  .1, -.075 );
+    glVertex3f( -.1,  .1,  .075 );
+    glEnd();
+    
+    glBegin(GL_POLYGON); //bottom
+    glVertex3f(  .1, -.1, -.075 );
+    glVertex3f(  .1, -.1,  .075 );
+    glVertex3f( -.1, -.1,  .075 );
+    glVertex3f( -.1, -.1, -.075 );
+    glEnd();
+    
+    glPopMatrix();
+    glEndList();
+    //END monitorBase
     
 }
 
